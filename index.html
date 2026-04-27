@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎬 AAA BIRTHDAY GAME</title>
+
+<style>
+body{
+margin:0;
+background:black;
+color:white;
+font-family:Arial;
+overflow:hidden;
+}
+
+/* 🌌 BACKGROUND CINEMA */
+body::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+background:radial-gradient(circle,#ff00cc,#5a00ff,#000);
+filter:blur(100px);
+animation:bg 15s infinite alternate;
+z-index:-1;
+}
+
+@keyframes bg{
+from{transform:scale(1);}
+to{transform:scale(1.5);}
+}
+
+/* 🎬 ENGINE */
+.screen{
+position:absolute;
+width:100vw;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+opacity:0;
+pointer-events:none;
+transition:1.2s ease;
+padding:20px;
+}
+
+.active{
+opacity:1;
+pointer-events:auto;
+}
+
+/* 🖼️ LAYOUT COM IMAGEM */
+.row{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+}
+
+img{
+width:220px;
+max-width:40vw;
+border-radius:15px;
+box-shadow:0 0 30px rgba(255,0,200,0.5);
+}
+
+/* 💖 TEXT */
+h1{
+text-shadow:0 0 30px pink;
+}
+
+/* 🎮 BUTTON */
+button{
+padding:14px 25px;
+border:none;
+border-radius:25px;
+background:hotpink;
+color:white;
+font-weight:bold;
+margin-top:15px;
+width:80%;
+max-width:300px;
+}
+
+/* 🎊 CONFETTI */
+.conf{
+position:absolute;
+width:8px;
+height:14px;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+0%{transform:translateY(-10vh) rotate(0);}
+100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
+}
+
+/* 💥 FLASH */
+.flash{
+position:absolute;
+width:100%;
+height:100%;
+background:white;
+opacity:0;
+animation:flash 0.4s;
+}
+
+@keyframes flash{
+0%{opacity:0;}
+50%{opacity:1;}
+100%{opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+<source src="music.mp3">
+</audio>
+
+<!-- 🎬 START (COM IMAGEM) -->
+<div class="screen active" id="start">
+<div class="row">
+
+<div>
+<h1>🎬 UMA HISTÓRIA COMEÇA</h1>
+<p>Prepare-se para uma experiência especial 💖</p>
+<button onclick="start()">INICIAR</button>
+</div>
+
+<img src="intro.jpg" alt="intro">
+</div>
+</div>
+
+<!-- ⏳ LOADING -->
+<div class="screen" id="load">
+<h1>Carregando emoção...</h1>
+</div>
+
+<!-- 📖 INTRO -->
+<div class="screen" id="intro">
+<h1>💖 Hoje é especial</h1>
+<button onclick="chapter1()">Continuar</button>
+</div>
+
+<!-- 🎮 CHAPTER -->
+<div class="screen" id="c1">
+<h1>📖 Escolha seu caminho</h1>
+<button onclick="choice(1)">Coração 💖</button>
+<button onclick="choice(0)">Razão 🧠</button>
+</div>
+
+<!-- 🎮 GAME -->
+<div class="screen" id="game">
+<h1>🎮 Mini Game</h1>
+<button onclick="win()">🎁 A</button>
+<button onclick="win()">🎁 B</button>
+</div>
+
+<!-- 💌 STORY -->
+<div class="screen" id="story">
+<h1>💌 Mensagem</h1>
+<p id="text"></p>
+<button onclick="final()">Continuar</button>
+</div>
+
+<!-- 🎬 FINAL -->
+<div class="screen" id="final">
+<h1>🎬 FINAL</h1>
+<button onclick="ending()">SURPRESA</button>
+</div>
+
+<!-- 🔐 SECRETO -->
+<div class="screen" id="secret">
+<h1>🔐 FINAL SECRETO</h1>
+<p>Você desbloqueou o coração verdadeiro 💖</p>
+</div>
+
+<!-- 🎉 PARTY -->
+<div class="screen" id="party">
+<h1>🎉 SURPRESA 🎉</h1>
+</div>
+
+<!-- 💖 END (COM IMAGEM) -->
+<div class="screen" id="end">
+
+<div class="row">
+
+<img src="final.jpg" alt="final">
+
+<div>
+<h1>💖 FELIZ ANIVERSÁRIO 💖</h1>
+
+<p style="max-width:400px;line-height:1.5;">
+Hoje é o seu dia especial 🎂✨<br><br>
+
+Você é luz, alegria e inspiração.<br>
+Tudo fica melhor quando você existe 🌟<br><br>
+
+Que sua vida seja cheia de felicidade, amor e conquistas 💖<br><br>
+
+🎂 Feliz aniversário 🎂
+</p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let love=0;
+
+/* FLOW */
+function show(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+/* START */
+function start(){
+show("load");
+setTimeout(()=>{
+music();
+show("intro");
+},2000);
+}
+
+/* MUSIC */
+function music(){
+let m=document.getElementById("music");
+m.volume=0;
+m.play();
+
+let v=0;
+let f=setInterval(()=>{
+if(v<1){v+=0.05;m.volume=v;}
+else clearInterval(f);
+},80);
+}
+
+/* CHAPTER */
+function chapter1(){
+show("c1");
+}
+
+/* CHOICE */
+function choice(v){
+love+=v;
+show("game");
+}
+
+/* GAME WIN */
+function win(){
+typeText("Você encontrou algo especial dentro da história 💖");
+}
+
+/* TYPE TEXT */
+function typeText(t){
+let i=0;
+document.getElementById("text").innerHTML="";
+function go(){
+if(i<t.length){
+document.getElementById("text").innerHTML+=t[i];
+i++;
+setTimeout(go,30);
+}
+}
+go();
+show("story");
+}
+
+/* FINAL */
+function final(){
+show("final");
+}
+
+/* ENDING LOGIC */
+function ending(){
+if(love>0){
+show("secret");
+setTimeout(party,2000);
+}else{
+party();
+}
+}
+
+/* PARTY */
+function party(){
+show("party");
+confetti();
+setTimeout(()=>show("end"),3000);
+}
+
+/* CONFETTI */
+function confetti(){
+for(let i=0;i<400;i++){
+let c=document.createElement("div");
+c.className="conf";
+c.style.left=Math.random()*100+"vw";
+c.style.background=`hsl(${Math.random()*360},100%,50%)`;
+c.style.animationDuration=(3+Math.random()*3)+"s";
+document.body.appendChild(c);
+
+setTimeout(()=>c.remove(),9000);
+}
+}
+
+</script>
+
+</body>
+</html>
