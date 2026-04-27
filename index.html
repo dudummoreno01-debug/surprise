@@ -14,7 +14,7 @@ body {
   overflow: hidden;
 }
 
-/* 🌌 FUNDO */
+/* 🌌 FUNDO CINEMATOGRÁFICO */
 body::before {
   content: "";
   position: absolute;
@@ -31,7 +31,7 @@ body::before {
   to {transform: scale(1.2);}
 }
 
-/* 🎬 CENAS */
+/* 🎬 CENAS AAA */
 .scene {
   position: absolute;
   width: 100vw;
@@ -84,6 +84,17 @@ button {
   max-width: 300px;
 }
 
+/* 🎵 BOTÃO MÚSICA */
+#musicBtn {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+
 /* 🎊 CONFETE REALISTA */
 .confetti {
   position: absolute;
@@ -91,17 +102,11 @@ button {
   height: 16px;
   opacity: 0.9;
   animation: fall linear forwards;
-  transform-origin: center;
 }
 
 @keyframes fall {
-  0% {
-    transform: translateY(-10vh) rotate(0deg);
-  }
-  100% {
-    transform: translateY(110vh) rotate(720deg);
-    opacity: 0;
-  }
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
 }
 
 /* 🐱 GATOS */
@@ -120,15 +125,12 @@ button {
 
 <body>
 
-<!-- 🎵 MÚSICA -->
-<iframe 
-width="0"
-height="0"
-<audio id="music" autoplay loop>
+<!-- 🎵 MÚSICA LOCAL -->
+<audio id="music" loop>
   <source src="фрози (frozy), Mwizz, George Kipa - Don't Copy My Flow (s l o w e d + r e v e r b) - Siyardley (youtube).mp3" type="audio/mpeg">
 </audio>
-allow="autoplay">
-</iframe>
+
+<button id="musicBtn" onclick="startMusic()">🎵 Iniciar Música</button>
 
 <!-- 1 -->
 <div class="scene active" id="s1">
@@ -165,39 +167,15 @@ allow="autoplay">
 <!-- 6 -->
 <div class="scene" id="s6">
   <h1>💌 Decisão Final</h1>
-  <button onclick="final('heart')">Coração ❤️</button>
-  <button onclick="final('mind')">Razão 🧠</button>
-</div>
-
-<!-- FINAL NORMAL -->
-<div class="scene" id="f1">
-  <h1>💖 Final do Coração</h1>
-  <p>Alguém realmente se importa com você 💫</p>
-</div>
-
-<!-- FINAL RAZÃO -->
-<div class="scene" id="f2">
-  <h1>🧠 Final da Razão</h1>
-  <p>Você pensou demais... mas o coração sente 💔</p>
-</div>
-
-<!-- FINAL SECRETO -->
-<div class="scene" id="secret">
-  <h1>💖 FINAL SECRETO</h1>
-  <p>Você seguiu o coração até o fim 💫</p>
-</div>
-
-<!-- SURPRESA -->
-<div class="scene" id="surprise">
-  <h1>...</h1>
+  <button onclick="final()">Finalizar 🎂</button>
 </div>
 
 <!-- FINAL -->
 <div class="scene" id="end">
   <h1>🎉 Mensagem Final</h1>
   <p>
-    Jennyfer... isso foi um presente de aniversário 💖  
-    espero que seu dia seja incrível 🎂✨
+    Jennyfer... isso foi feito pra você 💖  
+    Feliz aniversário 🎂✨
   </p>
 </div>
 
@@ -205,7 +183,24 @@ allow="autoplay">
 
 let affinity = 0;
 
-/* troca cena */
+/* 🎵 MÚSICA COM FADE IN */
+function startMusic(){
+  let music = document.getElementById("music");
+  music.volume = 0;
+  music.play();
+
+  let v = 0;
+  let fade = setInterval(() => {
+    if(v < 1){
+      v += 0.05;
+      music.volume = v;
+    } else {
+      clearInterval(fade);
+    }
+  }, 100);
+}
+
+/* 🎬 CENAS */
 function next(id){
   document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
   setTimeout(() => {
@@ -213,7 +208,7 @@ function next(id){
   }, 300);
 }
 
-/* escolha */
+/* 💖 ESCOLHA */
 function choice(type){
   if(type === "heart"){
     affinity++;
@@ -224,7 +219,7 @@ function choice(type){
   }
 }
 
-/* texto */
+/* ✍️ TEXTO */
 function typeText(text){
   let i = 0;
   document.getElementById("story").innerHTML = "";
@@ -240,73 +235,38 @@ function typeText(text){
   typing();
 }
 
-/* final */
-function final(type){
-  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
-
-  if(type === "heart"){
-    affinity++;
-    document.getElementById("f1").classList.add("active");
-  } else {
-    document.getElementById("f2").classList.add("active");
-  }
-
-  setTimeout(check, 2500);
-}
-
-/* check */
-function check(){
-  if(affinity >= 2){
-    secret();
-  } else {
-    surpriseFinal();
-  }
-}
-
-/* secreto */
-function secret(){
-  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
-  document.getElementById("secret").classList.add("active");
-  setTimeout(surpriseFinal, 2000);
-}
-
-/* 🎬 SURPRESA FINAL AAA */
-function surpriseFinal(){
-
-  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
-  let s = document.getElementById("surprise");
-  s.classList.add("active");
-
-  document.body.style.background = "black";
-
-  setTimeout(() => {
-    document.body.style.background = "radial-gradient(circle, #ff00cc, #00ffff, #ffcc00)";
-
-    s.innerHTML = `
-      <h1>🎉 SURPRESA!!! 🎉</h1>
-      <p>Feliz aniversário Jennyfer 💖</p>
-    `;
-
-    confettiRealistic();
-    cats();
-    emojis();
-
-    setTimeout(end, 5000);
-  }, 2000);
-}
-
-/* final */
-function end(){
+/* 🎯 FINAL + SURPRESA */
+function final(){
   document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
   document.getElementById("end").classList.add("active");
-  confettiRealistic();
+
+  surprise();
+}
+
+/* 🎉 SURPRESA CINEMATOGRÁFICA */
+function surprise(){
+
+  setTimeout(() => {
+    document.body.style.background = "black";
+
+    setTimeout(() => {
+      document.body.style.background =
+      "radial-gradient(circle, #ff00cc, #00ffff, #ffcc00)";
+
+      confetti();
+      cats();
+      emojis();
+
+    }, 2000);
+
+  }, 1000);
 }
 
 /* 🎊 CONFETE REALISTA */
-function confettiRealistic(){
-  const colors = ["#ff0", "#f0f", "#0ff", "#ff4", "#4ff", "#fff"];
+function confetti(){
+  const colors = ["#ff0","#f0f","#0ff","#fff","#ff4","#4ff"];
 
-  for(let i=0;i<250;i++){
+  for(let i=0;i<300;i++){
     let c = document.createElement("div");
     c.className = "confetti";
 
@@ -317,17 +277,16 @@ function confettiRealistic(){
     c.style.height = (10 + Math.random()*12) + "px";
 
     c.style.animationDuration = (3 + Math.random()*3) + "s";
-    c.style.animationDelay = (Math.random()*0.5) + "s";
 
     document.body.appendChild(c);
 
-    setTimeout(()=>c.remove(),7000);
+    setTimeout(()=>c.remove(),8000);
   }
 }
 
-/* 🐱 gatos */
+/* 🐱 GATOS */
 function cats(){
-  for(let i=0;i<20;i++){
+  for(let i=0;i<25;i++){
     let g = document.createElement("div");
     g.className = "cat";
     g.innerHTML = "🐱";
@@ -335,15 +294,15 @@ function cats(){
     g.style.top = Math.random()*100 + "vh";
     document.body.appendChild(g);
 
-    setTimeout(()=>g.remove(),7000);
+    setTimeout(()=>g.remove(),8000);
   }
 }
 
-/* 🎉 emojis */
+/* 🎉 EMOJIS */
 function emojis(){
   let e = ["🎂","🎉","🎊","💖","✨","🎁"];
 
-  for(let i=0;i<40;i++){
+  for(let i=0;i<50;i++){
     let el = document.createElement("div");
     el.innerHTML = e[Math.floor(Math.random()*e.length)];
     el.style.position = "absolute";
@@ -352,7 +311,7 @@ function emojis(){
     el.style.fontSize = "25px";
     document.body.appendChild(el);
 
-    setTimeout(()=>el.remove(),7000);
+    setTimeout(()=>el.remove(),8000);
   }
 }
 
