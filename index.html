@@ -64,7 +64,7 @@ flex-wrap:wrap;
 width:100%;
 }
 
-/* 🖼️ IMAGEM RESPONSIVA */
+/* 🖼️ IMAGEM */
 img{
 width:100%;
 max-width:250px;
@@ -98,7 +98,7 @@ width:90%;
 max-width:300px;
 }
 
-/* 🎵 BOTÃO ÁUDIO (OBRIGATÓRIO MOBILE) */
+/* 🎵 BOTÃO ÁUDIO */
 #musicBtn{
 position:absolute;
 top:10px;
@@ -109,17 +109,23 @@ background:rgba(255,255,255,0.1);
 backdrop-filter:blur(10px);
 }
 
-/* 🎊 CONFETTI */
+/* 🎊 CONFETTI MELHORADO */
 .conf{
 position:absolute;
 width:8px;
-height:14px;
+height:12px;
 animation:fall linear forwards;
+opacity:0.9;
 }
 
 @keyframes fall{
 0%{transform:translateY(-10vh) rotate(0);}
 100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
+}
+
+/* 🔥 evita scroll bug mobile */
+html,body{
+height:100%;
 }
 </style>
 </head>
@@ -131,7 +137,7 @@ animation:fall linear forwards;
 <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<!-- 🎵 BOTÃO (OBRIGATÓRIO PARA CELULAR) -->
+<!-- 🎵 BOTÃO -->
 <button id="musicBtn" onclick="startMusic()">🎵 Iniciar Música</button>
 
 <!-- 🎬 START -->
@@ -230,17 +236,20 @@ Que sua vida seja cheia de amor e felicidade 💖<br><br>
 
 let love=0;
 
-/* 🎵 MÚSICA (MOBILE SAFE) */
+/* 🎵 MÚSICA (CORRIGIDO MOBILE) */
 function startMusic(){
 let m=document.getElementById("music");
 m.volume=0;
-m.play().catch(()=>{});
+
+m.play().then(()=>{
 
 let v=0;
 let f=setInterval(()=>{
 if(v<1){v+=0.05;m.volume=v;}
 else clearInterval(f);
 },80);
+
+}).catch(()=>{});
 
 document.getElementById("musicBtn").style.display="none";
 }
@@ -254,9 +263,7 @@ document.getElementById(id).classList.add("active");
 /* START */
 function start(){
 show("load");
-setTimeout(()=>{
-show("intro");
-},2000);
+setTimeout(()=>show("intro"),2000);
 }
 
 /* CHAPTER */
@@ -312,9 +319,9 @@ confetti();
 setTimeout(()=>show("end"),3000);
 }
 
-/* CONFETTI */
+/* CONFETTI MAIS LEVE */
 function confetti(){
-for(let i=0;i<350;i++){
+for(let i=0;i<250;i++){
 let c=document.createElement("div");
 c.className="conf";
 c.style.left=Math.random()*100+"vw";
@@ -322,7 +329,7 @@ c.style.background=`hsl(${Math.random()*360},100%,50%)`;
 c.style.animationDuration=(3+Math.random()*3)+"s";
 document.body.appendChild(c);
 
-setTimeout(()=>c.remove(),9000);
+setTimeout(()=>c.remove(),8000);
 }
 }
 
